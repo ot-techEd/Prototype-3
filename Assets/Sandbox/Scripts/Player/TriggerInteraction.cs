@@ -16,7 +16,19 @@ public class TriggerInteraction : MonoBehaviour
         {
             if (playerController.HasPickup()) { return;} //Guard Clause
 
-            playerController.PickUpItem(other.transform);
+            //Tell Player to Pickup item and give it a reference to the item to pickup
+            playerController.MakeItemAvailableForPickup(other.transform); 
+
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("PickupItem"))
+        {
+            //Check if player has left pickup item 
+            playerController.MakeItemNotAvailableForPickup();
+
         }
     }
 }
