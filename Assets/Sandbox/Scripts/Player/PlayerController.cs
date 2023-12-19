@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,10 +11,12 @@ public class PlayerController : MonoBehaviour
     private Transform currentItemAvailableForPickup;
 
     [SerializeField] private Transform pickupTransform;
+
+    public UnityEvent OnItemPickedUp;
     // Start is called before the first frame update
     void Start()
     {
-        
+        OnItemPickedUp.AddListener(PickUpItem);
     }
 
     // Update is called once per frame
@@ -23,9 +26,20 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                PickUpItem();
+                OnItemPickedUp.Invoke();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            DropItem();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            OnItemPickedUp.RemoveListener(PickUpItem);
+        }
+
     }
     public void MakeItemAvailableForPickup(Transform itemToPickup)
     {
@@ -42,6 +56,14 @@ public class PlayerController : MonoBehaviour
         Debug.Log("ITEM HAS BEEN PICKED UP!!!!!!");
     }
 
+    private void DropItem()
+    {
+        if (currentItemAvailableForPickup != null)
+        {
+            currentItemAvailableForPickup.SetParent(null);
+            hasPickup = false;
+        }
+    }
     public bool HasPickup()
     {
         return hasPickup;
