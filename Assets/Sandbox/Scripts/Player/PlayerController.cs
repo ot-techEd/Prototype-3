@@ -13,9 +13,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform pickupTransform;
 
     public UnityEvent OnItemPickedUp;
+
+    public static PlayerController instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
+
+        //Subscribe PickUpItem function to the OnItemPickedUp Unity Event
         OnItemPickedUp.AddListener(PickUpItem);
     }
 
@@ -33,11 +42,6 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             DropItem();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnItemPickedUp.RemoveListener(PickUpItem);
         }
 
     }

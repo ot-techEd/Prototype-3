@@ -7,17 +7,14 @@ public class Movement : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
 
+    private Vector2 inputVector;
+
     [SerializeField] private float speed = 2.0f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
-        GetInput();
+        GetInputWithKeys();
         MovePlayer();
     }
 
@@ -26,10 +23,42 @@ public class Movement : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
     }
+    private void GetInputWithKeys()
+    {
+        Vector2 input = new Vector2(0, 0);
+        if (Input.GetKey(KeyCode.W))
+        {
+            input.y = +1;
+        }
 
+        if (Input.GetKey(KeyCode.S))
+        {
+            input.y = -1;
+        }
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            input.x = -1;
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            input.x = +1;
+        }
+
+        inputVector = input.normalized;
+    }
     private void MovePlayer()
     {
-        Vector3 moveDirection = new Vector3(horizontalInput, 0.0f, verticalInput);
-        transform.Translate(moveDirection * speed * Time.deltaTime);
+        Vector3 moveDirection = new Vector3(inputVector.x
+            , 0.0f,
+            inputVector.y);
+
+        transform.position += moveDirection * speed * Time.deltaTime;
+
+
+        transform.forward = Vector3.Slerp(transform.forward,moveDirection, Time.deltaTime * speed);
+
+        //transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 }
